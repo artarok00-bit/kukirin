@@ -1,14 +1,13 @@
--- [[ БЕСКОНЕЧНАЯ ПЛАТФОРМА — v1.0 ]]
--- Создает платформу под ногами и удерживает на ней персонажа
+-- [[ БОЛЬШАЯ ПЛАТФОРМА НА ВЫСОТЕ — v1.1 ]]
+-- Создает платформу на высоте и телепортирует на неё
 
 local Player = game.Players.LocalPlayer
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local PlatformActive = false
 local Platform = nil
-local HeartbeatConn = nil
-local PlatformHeight = 3 -- Высота над землей
+local PlatformHeight = 500 -- Высота в небе
+local PlatformSize = 100 -- Размер (100x100)
 
 -- ===== GUI =====
 local ScreenGui = Instance.new("ScreenGui")
@@ -29,50 +28,38 @@ Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(0, 8)
 
 -- ===== СОЗДАНИЕ ПЛАТФОРМЫ =====
 local function CreatePlatform()
+    local Character = Player.Character or Player.CharacterAdded:Wait()
+    local RootPart = Character:WaitForChild("HumanoidRootPart")
+
     if Platform then Platform:Destroy() end
     
+    -- Создаем платформу
     Platform = Instance.new("Part")
-    Platform.Name = "InfinitePlatform"
-    Platform.Size = Vector3.new(500, 1, 500) -- Огромная, чтобы казалась бесконечной
-    Platform.Anchored = false -- Не anchored, чтобы двигать
+    Platform.Name = "HighPlatform"
+    Platform.Size = Vector3.new(PlatformSize, 2, PlatformSize)
+    Platform.Anchored = true
     Platform.CanCollide = true
-    Platform.Transparency = 0.8 -- Полупрозрачная, чтобы видеть, где стоишь
+    Platform.Transparency = 0.3
     Platform.Color = Color3.fromRGB(0, 255, 255)
     Platform.Material = Enum.Material.Neon
+    
+    -- Ставим её на заданной высоте под игроком
+    local TargetPos = Vector3.new(RootPart.Position.X, PlatformHeight, RootPart.Position.Z)
+    Platform.Position = TargetPos
+    
     Platform.Parent = workspace
     
-    -- Привязываем к персонажу, чтобы не улетала
-    local Weld = Instance.new("WeldConstraint")
-    Weld.Part0 = Platform
-    Weld.Part1 = Player.Character.HumanoidRootPart
-    Weld.Parent = Platform
+    -- Телепортируем игрока на платформу (чуть выше поверхности)
+    RootPart.CFrame = CFrame.new(TargetPos + Vector3.new(0, 5, 0))
 end
 
 -- ===== ВКЛЮЧЕНИЕ =====
 local function EnablePlatform()
-    if not Player.Character then return end
     PlatformActive = true
     ToggleBtn.Text = "ПЛАТФОРМА: ВКЛ"
     ToggleBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
     
     CreatePlatform()
-    
-    -- Цикл удержания
-    if HeartbeatConn then HeartbeatConn:Disconnect() end
-    HeartbeatConn = RunService.Heartbeat:Connect(function()
-        if not PlatformActive or not Platform then return end
-        local char = Player.Character
-        if not char then return end
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
-        
-        -- Ставим платформу ровно под ноги (с учетом высоты)
-        Platform.CFrame = CFrame.new(root.Position - Vector3.new(0, PlatformHeight, 0))
-        
-        -- Удерживаем игрока на платформе (чтобы не скользил и не падал)
-        -- Это предотвращает падение, если платформа уходит из-под ног
-        root.Velocity = Vector3.new(0, 0, 0) -- Гасим падение
-    end)
 end
 
 -- ===== ВЫКЛЮЧЕНИЕ =====
@@ -80,11 +67,6 @@ local function DisablePlatform()
     PlatformActive = false
     ToggleBtn.Text = "ПЛАТФОРМА: ВЫКЛ"
     ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-    
-    if HeartbeatConn then
-        HeartbeatConn:Disconnect()
-        HeartbeatConn = nil
-    end
     
     if Platform then
         Platform:Destroy()
@@ -105,9 +87,9 @@ end)
 Player.CharacterAdded:Connect(function()
     if PlatformActive then
         DisablePlatform()
-        task.wait(0.5)
+        task.wait(1) -- Ждем прогрузки
         EnablePlatform()
     end
 end)
 
-print("✅ Платформа загружена")
+print("✅ Платформа на высоте загружена")
