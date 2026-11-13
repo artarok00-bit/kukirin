@@ -1,4 +1,4 @@
--- [[ ARTARIO HUB — ПЛАТФОРМА + СТАНТ + АНТИ-АФК ]]
+-- [[ ARTARIO HUB — ПЛАТФОРМА (высота до 15000) + СТАНТ ]]
 -- Разработчик: artar
 
 local Player = game.Players.LocalPlayer
@@ -24,8 +24,8 @@ ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 320, 0, 240) -- 🔥 УВЕЛИЧИЛИ ВЫСОТУ (было 220)
-MainFrame.Position = UDim2.new(0.5, -160, 0.5, -120)
+MainFrame.Size = UDim2.new(0, 320, 0, 320) 
+MainFrame.Position = UDim2.new(0.5, -160, 0.5, -160)
 MainFrame.BackgroundColor3 = Color3.fromRGB(25, 20, 20)
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
@@ -78,9 +78,10 @@ Content.Position = UDim2.new(0, 0, 0, 40)
 Content.BackgroundTransparency = 1
 Content.Parent = MainFrame
 
+-- Кнопка Платформы
 local TogglePlatformBtn = Instance.new("TextButton")
-TogglePlatformBtn.Size = UDim2.new(0.9, 0, 0, 45)
-TogglePlatformBtn.Position = UDim2.new(0.05, 0, 0.05, 0) -- Чуть подняли
+TogglePlatformBtn.Size = UDim2.new(0.9, 0, 0, 40)
+TogglePlatformBtn.Position = UDim2.new(0.05, 0, 0.04, 0)
 TogglePlatformBtn.Text = "ВКЛЮЧИТЬ ПЛАТФОРМУ"
 TogglePlatformBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 TogglePlatformBtn.TextSize = 14
@@ -89,9 +90,55 @@ TogglePlatformBtn.Font = Enum.Font.GothamBold
 TogglePlatformBtn.Parent = Content
 Instance.new("UICorner", TogglePlatformBtn).CornerRadius = UDim.new(0, 8)
 
+-- ПОЛЗУНОК ВЫСОТЫ (Стрелки + Текст)
+local HeightLabel = Instance.new("TextLabel")
+HeightLabel.Size = UDim2.new(0.9, 0, 0, 15)
+HeightLabel.Position = UDim2.new(0.05, 0, 0.2, 0)
+HeightLabel.Text = "ВЫСОТА ПЛАТФОРМЫ (ДО 15000)"
+HeightLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+HeightLabel.TextSize = 10
+HeightLabel.TextXAlignment = Enum.TextXAlignment.Left
+HeightLabel.BackgroundTransparency = 1
+HeightLabel.Font = Enum.Font.Gotham
+HeightLabel.Parent = Content
+
+local MinusBtn = Instance.new("TextButton")
+MinusBtn.Size = UDim2.new(0.2, 0, 0, 35)
+MinusBtn.Position = UDim2.new(0.05, 0, 0.26, 0)
+MinusBtn.Text = "-"
+MinusBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinusBtn.TextSize = 20
+MinusBtn.BackgroundColor3 = Color3.fromRGB(60, 50, 50)
+MinusBtn.Font = Enum.Font.GothamBold
+MinusBtn.Parent = Content
+Instance.new("UICorner", MinusBtn).CornerRadius = UDim.new(0, 8)
+
+local HeightDisplay = Instance.new("TextLabel")
+HeightDisplay.Size = UDim2.new(0.45, 0, 0, 35)
+HeightDisplay.Position = UDim2.new(0.275, 0, 0.26, 0)
+HeightDisplay.Text = "500"
+HeightDisplay.TextColor3 = Color3.fromRGB(255, 255, 255)
+HeightDisplay.TextSize = 14
+HeightDisplay.BackgroundColor3 = Color3.fromRGB(40, 30, 30)
+HeightDisplay.Font = Enum.Font.GothamBold
+HeightDisplay.Parent = Content
+Instance.new("UICorner", HeightDisplay).CornerRadius = UDim.new(0, 8)
+
+local PlusBtn = Instance.new("TextButton")
+PlusBtn.Size = UDim2.new(0.2, 0, 0, 35)
+PlusBtn.Position = UDim2.new(0.75, 0, 0.26, 0)
+PlusBtn.Text = "+"
+PlusBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlusBtn.TextSize = 20
+PlusBtn.BackgroundColor3 = Color3.fromRGB(60, 50, 50)
+PlusBtn.Font = Enum.Font.GothamBold
+PlusBtn.Parent = Content
+Instance.new("UICorner", PlusBtn).CornerRadius = UDim.new(0, 8)
+
+-- Кнопка Станта
 local ToggleStuntBtn = Instance.new("TextButton")
-ToggleStuntBtn.Size = UDim2.new(0.9, 0, 0, 45)
-ToggleStuntBtn.Position = UDim2.new(0.05, 0, 0.35, 0) -- Чуть подняли
+ToggleStuntBtn.Size = UDim2.new(0.9, 0, 0, 40)
+ToggleStuntBtn.Position = UDim2.new(0.05, 0, 0.45, 0)
 ToggleStuntBtn.Text = "СТАНТ: ВЫКЛ"
 ToggleStuntBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleStuntBtn.TextSize = 14
@@ -100,17 +147,38 @@ ToggleStuntBtn.Font = Enum.Font.GothamBold
 ToggleStuntBtn.Parent = Content
 Instance.new("UICorner", ToggleStuntBtn).CornerRadius = UDim.new(0, 8)
 
--- 🔥 НОВАЯ НАДПИСЬ ВНИЗУ
+-- Надпись Анти-АФК
 local AntiAfkLabel = Instance.new("TextLabel")
-AntiAfkLabel.Size = UDim2.new(1, 0, 0, 25)
-AntiAfkLabel.Position = UDim2.new(0, 0, 1, -25) -- Самый низ
+AntiAfkLabel.Size = UDim2.new(1, 0, 0, 20)
+AntiAfkLabel.Position = UDim2.new(0, 0, 1, -20)
 AntiAfkLabel.Text = "🟢 Анти-АФК включено"
-AntiAfkLabel.TextColor3 = Color3.fromRGB(150, 150, 150) -- Серый, чтобы не отвлекать
-AntiAfkLabel.TextSize = 11
+AntiAfkLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
+AntiAfkLabel.TextSize = 10
 AntiAfkLabel.Font = Enum.Font.Gotham
 AntiAfkLabel.BackgroundTransparency = 1
 AntiAfkLabel.Parent = MainFrame
 
+
+-- ===== ЛОГИКА ВЫСОТЫ =====
+MinusBtn.MouseButton1Click:Connect(function()
+    -- Шаг 500 за нажатие
+    PlatformHeight = PlatformHeight - 500
+    if PlatformHeight < 50 then PlatformHeight = 50 end
+    HeightDisplay.Text = tostring(PlatformHeight)
+    if PlatformActive and Platform then
+        Platform.Position = Vector3.new(Platform.Position.X, PlatformHeight, Platform.Position.Z)
+    end
+end)
+
+PlusBtn.MouseButton1Click:Connect(function()
+    -- Шаг 500 за нажатие
+    PlatformHeight = PlatformHeight + 500
+    if PlatformHeight > 15000 then PlatformHeight = 15000 end -- 🔥 Максимум 15000
+    HeightDisplay.Text = tostring(PlatformHeight)
+    if PlatformActive and Platform then
+        Platform.Position = Vector3.new(Platform.Position.X, PlatformHeight, Platform.Position.Z)
+    end
+end)
 
 -- ===== ЛОГИКА ПЛАТФОРМЫ =====
 local function DisablePlatform()
@@ -222,9 +290,9 @@ local minimized = false
 MinimizeBtn.MouseButton1Click:Connect(function()
     minimized = not minimized
     Content.Visible = not minimized
-    AntiAfkLabel.Visible = not minimized -- Прячем надпись при сворачивании
+    AntiAfkLabel.Visible = not minimized
     MinimizeBtn.Text = minimized and "+" or "—"
-    MainFrame.Size = minimized and UDim2.new(0, 320, 0, 40) or UDim2.new(0, 320, 0, 240) -- Не забываем обновить размер
+    MainFrame.Size = minimized and UDim2.new(0, 320, 0, 40) or UDim2.new(0, 320, 0, 320)
 end)
 
 CloseBtn.MouseButton1Click:Connect(function()
@@ -241,4 +309,4 @@ Player.CharacterAdded:Connect(function()
     end
 end)
 
-print("✅ ARTARIO HUB (со Стантом и Анти-АФК) загружен")
+print("✅ ARTARIO HUB (высота до 15000) загружен")
